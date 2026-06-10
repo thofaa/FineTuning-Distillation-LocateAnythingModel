@@ -42,7 +42,7 @@ def build_training_args(cfg: TrainConfig) -> TrainingArguments:
         bf16=True,
         logging_steps=10,
         save_strategy="epoch",
-        eval_strategy="epoch",
+        evaluation_strategy="epoch",
         load_best_model_at_end=True,
         report_to="none",
     )
@@ -76,7 +76,7 @@ def main() -> None:
     print(f"- val={cfg.val_jsonl}")
     print(f"- output_dir={cfg.output_dir}")
     print(f"- lora_targets={lora_cfg.target_modules}")
-    print(f"- eval_strategy={training_args.eval_strategy}")
+    print(f"- evaluation_strategy={training_args.evaluation_strategy}")
     print("Integrate this script with model/data loading cells in your Colab notebook.")
 
 

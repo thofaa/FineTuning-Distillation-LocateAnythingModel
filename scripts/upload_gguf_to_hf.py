@@ -10,6 +10,8 @@ from huggingface_hub import HfApi
 
 
 def upload_artifact(repo_id: str, artifact: Path, token: str | None = None) -> None:
+    if not artifact.is_file():
+        raise FileNotFoundError(f"Artifact file not found: {artifact}")
     api = HfApi(token=token)
     api.upload_file(
         path_or_fileobj=str(artifact),

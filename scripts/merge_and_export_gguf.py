@@ -29,7 +29,14 @@ def export_to_gguf(llama_cpp_dir: Path, merged_model_dir: Path, gguf_out: Path) 
         "--outfile",
         str(gguf_out),
     ]
-    subprocess.run(command, check=True)
+    try:
+        subprocess.run(command, check=True, capture_output=True, text=True)
+    except subprocess.CalledProcessError as exc:
+        stderr = exc.stderr or ""
+        stdout = exc.stdout or ""
+        raise RuntimeError(
+            f"GGUF export failed for command: {' '.join(command)}\nstdout:\n{stdout}\nstderr:\n{stderr}"
+        ) from exc
 
 
 def main() -> None:
