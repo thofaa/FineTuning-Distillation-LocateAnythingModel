@@ -21,7 +21,9 @@ def merge_adapter(base_model: str, adapter_dir: Path, merged_out: Path) -> Path:
 
 
 def export_to_gguf(llama_cpp_dir: Path, merged_model_dir: Path, gguf_out: Path) -> None:
-    converter = llama_cpp_dir / "convert_hf_to_gguf.py"
+    converter = llama_cpp_dir / "convert-hf-to-gguf.py"
+    if not converter.is_file():
+        raise FileNotFoundError(f"llama.cpp converter not found: {converter}")
     command = [
         "python",
         str(converter),

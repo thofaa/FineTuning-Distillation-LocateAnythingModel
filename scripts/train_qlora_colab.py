@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import inspect
 from dataclasses import dataclass
 
 from peft import LoraConfig
@@ -33,19 +34,24 @@ def build_lora_config() -> LoraConfig:
 
 
 def build_training_args(cfg: TrainConfig) -> TrainingArguments:
-    return TrainingArguments(
-        output_dir=cfg.output_dir,
-        per_device_train_batch_size=cfg.batch_size,
-        per_device_eval_batch_size=cfg.batch_size,
-        num_train_epochs=cfg.epochs,
-        learning_rate=cfg.learning_rate,
-        bf16=True,
-        logging_steps=10,
-        save_strategy="epoch",
-        evaluation_strategy="epoch",
-        load_best_model_at_end=True,
-        report_to="none",
-    )
+    kwargs = {
+        "output_dir": cfg.output_dir,
+        "per_device_train_batch_size": cfg.batch_size,
+        "per_device_eval_batch_size": cfg.batch_size,
+        "num_train_epochs": cfg.epochs,
+        "learning_rate": cfg.learning_rate,
+        "bf16": True,
+        "logging_steps": 10,
+        "save_strategy": "epoch",
+        "load_best_model_at_end": True,
+        "report_to": "none",
+    }
+    parameters = inspect.signature(TrainingArguments.__init__).parameters
+    if "eval_strategy" in parameters:
+        kwargs["eval_strategy"] = "epoch"
+    else:
+        kwargs["evaluation_strategy"] = "epoch"
+    return TrainingArguments(**kwargs)
 
 
 def main() -> None:
@@ -76,7 +82,8 @@ def main() -> None:
     print(f"- val={cfg.val_jsonl}")
     print(f"- output_dir={cfg.output_dir}")
     print(f"- lora_targets={lora_cfg.target_modules}")
-    print(f"- evaluation_strategy={training_args.evaluation_strategy}")
+    eval_strategy = getattr(training_args, "eval_strategy", getattr(training_args, "evaluation_strategy", "unknown"))
+    print(f"- eval_strategy={eval_strategy}")
     print("Integrate this script with model/data loading cells in your Colab notebook.")
 
 
