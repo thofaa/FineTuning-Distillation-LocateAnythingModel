@@ -49,7 +49,7 @@ def format_grounding_prompt(detection: dict[str, Any], image_width: float, image
     label = str(detection.get("label", "unknown"))
     luminance_level = str(detection.get("luminance_level", "unknown"))
     confidence = float(detection.get("confidence", 0.0))
-    reasoning = str(detection.get("reasoning", ""))
+    reasoning = str(detection.get("reasoning", "")).replace("\n", " ").replace("\r", " ").replace(";", ",")
     return (
         "<|object_ref_start|>"
         f"{label}"

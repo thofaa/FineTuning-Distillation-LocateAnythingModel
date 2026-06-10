@@ -47,7 +47,9 @@ def build_training_args(cfg: TrainConfig) -> TrainingArguments:
     }
     try:
         return TrainingArguments(eval_strategy="epoch", **kwargs)
-    except TypeError:
+    except TypeError as exc:
+        if "eval_strategy" not in str(exc):
+            raise
         return TrainingArguments(evaluation_strategy="epoch", **kwargs)
 
 

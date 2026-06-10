@@ -36,8 +36,12 @@ class PreprocessExDarkTests(unittest.TestCase):
             lines = output_path.read_text(encoding="utf-8").strip().splitlines()
             self.assertEqual(len(lines), 1)
             record = json.loads(lines[0])
+            self.assertEqual(record["label"], "car")
             self.assertIn("<|object_ref_start|>car<|object_ref_end|>", record["prompt"])
             self.assertIn("<|box_start|>(100,100),(500,400)<|box_end|>", record["prompt"])
+            self.assertIn("luminance=very_low;", record["prompt"])
+            self.assertIn("confidence=0.9500;", record["prompt"])
+            self.assertIn("reasoning=dim object silhouette", record["prompt"])
 
     def test_explicit_dimension_overrides_take_precedence(self) -> None:
         payload = {

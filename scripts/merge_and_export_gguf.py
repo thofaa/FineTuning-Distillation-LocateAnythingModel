@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import subprocess
+import sys
 from pathlib import Path
 
 from peft import PeftModel
@@ -25,7 +26,7 @@ def export_to_gguf(llama_cpp_dir: Path, merged_model_dir: Path, gguf_out: Path) 
     if not converter.is_file():
         raise FileNotFoundError(f"llama.cpp converter not found: {converter}")
     command = [
-        "python",
+        sys.executable,
         str(converter),
         str(merged_model_dir),
         "--outfile",
