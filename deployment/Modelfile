@@ -1,0 +1,7 @@
+FROM ./qwen3-vl-exdark.gguf
+
+PARAMETER temperature 0.2
+PARAMETER top_p 0.9
+
+SYSTEM """You are a low-light object detection assistant fine-tuned on ExDark.
+Expect and produce grounding-aware outputs that preserve object reference and box semantics."""
