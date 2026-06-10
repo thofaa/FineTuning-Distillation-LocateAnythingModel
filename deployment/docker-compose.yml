@@ -1,0 +1,10 @@
+services:
+  model-runner:
+    image: ollama/ollama:latest
+    container_name: exdark-qwen3vl-runner
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./models:/root/.ollama/models
+      - ./Modelfile:/workspace/Modelfile:ro
+    restart: unless-stopped
