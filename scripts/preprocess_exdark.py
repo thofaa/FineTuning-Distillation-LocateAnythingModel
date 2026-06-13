@@ -64,14 +64,14 @@ def _infer_dimension(data: dict[str, Any], explicit: int | None, keys: list[str]
         if value is not None:
             return int(value)
     raise ValueError(
-        f"Missing required dimension. Provide one of {keys} in JSON or use --image-width/--image-height."
+        f"Missing required dimension. Provide one of {keys} in JSON."
     )
 
 
-def convert_annotations(input_path: Path, output_path: Path, image_width: int | None, image_height: int | None) -> int:
+def convert_annotations(input_path: Path, output_path: Path) -> int:
     payload = json.loads(input_path.read_text(encoding="utf-8"))
-    width = _infer_dimension(payload, image_width, ["image_width", "width", "img_width"])
-    height = _infer_dimension(payload, image_height, ["image_height", "height", "img_height"])
+    width = _infer_dimension(payload, ["image_width", "width", "img_width"])
+    height = _infer_dimension(payload, ["image_height", "height", "img_height"])
 
     detections = payload.get("detections", [])
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -89,15 +89,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", required=True, type=Path, help="Path to ExDark-style annotation JSON.")
     parser.add_argument("--output", required=True, type=Path, help="Destination JSONL file.")
-    parser.add_argument("--image-width", type=int, help="Optional image width override.")
-    parser.add_argument("--image-height", type=int, help="Optional image height override.")
     args = parser.parse_args()
 
     written = convert_annotations(
         input_path=args.input,
         output_path=args.output,
-        image_width=args.image_width,
-        image_height=args.image_height,
     )
     print(f"Wrote {written} normalized detection prompts to {args.output}")
 
