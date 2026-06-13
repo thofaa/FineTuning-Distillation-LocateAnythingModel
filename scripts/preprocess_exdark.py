@@ -10,7 +10,7 @@ from typing import Any
 
 
 def _clamp(value: int, low: int, high: int) -> int:
-    return max(low, min(high, value))
+    return value
 
 
 def normalize_box(
@@ -28,12 +28,7 @@ def normalize_box(
     ny_min = round((y_min / image_height) * scale)
     nx_max = round((x_max / image_width) * scale)
     ny_max = round((y_max / image_height) * scale)
-    return (
-        _clamp(nx_min, 0, scale),
-        _clamp(ny_min, 0, scale),
-        _clamp(nx_max, 0, scale),
-        _clamp(ny_max, 0, scale),
-    )
+    return (nx_min, ny_min, nx_max, ny_max)
 
 
 def format_grounding_prompt(detection: dict[str, Any], image_width: float, image_height: float) -> str:
