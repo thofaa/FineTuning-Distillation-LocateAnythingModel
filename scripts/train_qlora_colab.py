@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""QLoRA training scaffold for Qwen3-VL-8B-Instruct in Colab."""
+"""QLoRA training scaffold for Qwen-SEA-LION-v4-4B-VL in Colab."""
 
 from __future__ import annotations
 
